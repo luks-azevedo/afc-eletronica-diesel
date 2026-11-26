@@ -12,7 +12,7 @@ export const site: SiteConfig = {
   description:
     'Eletrônica embarcada, gerenciamento do motor e câmbio, injeção diesel e emissões para caminhões, ônibus e vans em Conselheiro Lafaiete.',
   segment: 'Eletrônica diesel',
-  domain: '',
+  domain: 'https://afceletronica.apresenta.workers.dev',
   logo: {
     src: '/images/logo-afc.png',
     srcInverted: '/images/logo-afc.png',
