@@ -33,6 +33,8 @@ interface Props {
    * ou 'inverted' (degradê escuro na cor `inverted` e texto claro, ideal para temas claros).
    */
   coverTone?: 'background' | 'inverted';
+  /** Variante cover: lado do texto em telas grandes (no celular ocupa a largura toda). */
+  coverAlign?: 'left' | 'right';
 }
 
 const {
@@ -47,6 +49,7 @@ const {
   highlights = [],
   decor = false,
   coverTone = 'background',
+  coverAlign = 'left',
 } = Astro.props;
 
 const isSplit = variant === 'split' && image;
@@ -54,13 +57,14 @@ const isCentered = variant === 'centered';
 const isPage = variant === 'page';
 const isCover = variant === 'cover' && image;
 const coverInverted = isCover && coverTone === 'inverted';
+const coverRight = isCover && coverAlign === 'right';
 ---
 
 <section
   class:list={[
     'relative overflow-x-clip',
     isCover
-      ? ['hero-cover flex min-h-[min(88svh,760px)] items-end pt-32 pb-16 lg:items-center lg:pb-24', coverInverted && 'hero-cover--inverted text-inverted-ink']
+      ? ['hero-cover flex min-h-[min(88svh,760px)] items-end pt-32 pb-16 lg:items-center lg:pb-24', coverInverted && 'hero-cover--inverted text-inverted-ink', coverRight && 'hero-cover--right']
       : isPage
         ? 'border-b border-line pt-14 pb-12 lg:pt-20 lg:pb-16'
         : 'pt-12 pb-16 lg:pt-20 lg:pb-24',
@@ -85,7 +89,7 @@ const coverInverted = isCover && coverTone === 'inverted';
   }
   <Container class={isCover ? 'relative' : undefined}>
     <div class:list={[isSplit && 'grid items-center gap-12 lg:grid-cols-12 lg:gap-16']}>
-      <div class:list={[isSplit && 'lg:col-span-7', isCentered && 'mx-auto max-w-3xl text-center', (isPage || isCover) && 'max-w-3xl']}>
+      <div class:list={[isSplit && 'lg:col-span-7', isCentered && 'mx-auto max-w-3xl text-center', (isPage || isCover) && 'max-w-3xl', coverRight && 'lg:ml-auto lg:max-w-xl']}>
         {eyebrow && <p class:list={['mb-5 text-sm font-medium tracking-[0.08em] uppercase', coverInverted ? 'text-inverted-ink/90' : 'text-accent']}>{eyebrow}</p>}
         <h1 id="page-title" class:list={[isPage ? 'text-h2 sm:text-[clamp(2.25rem,1.6rem+2.4vw,3.5rem)]' : 'text-display']}>
           {title}
@@ -173,9 +177,21 @@ const coverInverted = isCover && coverTone === 'inverted';
       linear-gradient(to right, color-mix(in srgb, var(--color-bg) 85%, transparent) 0%, transparent 75%);
   }
 
+  .hero-cover--right .hero-cover__shade {
+    background:
+      linear-gradient(to top, var(--color-bg) 0%, color-mix(in srgb, var(--color-bg) 70%, transparent) 45%, color-mix(in srgb, var(--color-bg) 35%, transparent) 100%),
+      linear-gradient(to left, color-mix(in srgb, var(--color-bg) 85%, transparent) 0%, transparent 75%);
+  }
+
   .hero-cover--inverted .hero-cover__shade {
     background:
       linear-gradient(to top, color-mix(in srgb, var(--color-inverted) 92%, transparent) 0%, color-mix(in srgb, var(--color-inverted) 55%, transparent) 55%, color-mix(in srgb, var(--color-inverted) 25%, transparent) 100%),
       linear-gradient(to right, color-mix(in srgb, var(--color-inverted) 88%, transparent) 0%, transparent 80%);
+  }
+
+  .hero-cover--inverted.hero-cover--right .hero-cover__shade {
+    background:
+      linear-gradient(to top, color-mix(in srgb, var(--color-inverted) 92%, transparent) 0%, color-mix(in srgb, var(--color-inverted) 55%, transparent) 55%, color-mix(in srgb, var(--color-inverted) 25%, transparent) 100%),
+      linear-gradient(to left, color-mix(in srgb, var(--color-inverted) 88%, transparent) 0%, transparent 80%);
   }
 </style>
