@@ -1,0 +1,296 @@
+---
+/**
+ * Cardápio completo (restaurantes, bares, cafeterias): navegação por categorias
+ * fixa ao rolar e itens em duas colunas. Preços só aparecem quando o item tem `price`.
+ * Dados: tipo MenuCategory em src/types/menu.ts.
+ */
+import Container from '../ui/Container.astro';
+import type { MenuCategory } from '../../types/menu';
+
+interface Props {
+  categories: MenuCategory[];
+  note?: string;
+}
+
+const { categories, note } = Astro.props;
+
+/** Cor de cada categoria: `color` da categoria ou a cor primária do tema. */
+const swatch = (c: MenuCategory) => ({
+  bg: c.color ?? 'var(--color-primary)',
+  fg: c.colorText ?? (c.color ? '#FFFFFF' : 'var(--color-primary-contrast)'),
+});
+---
+
+<div class="menu">
+  <nav class="menu-nav" aria-label="Categorias do cardápio">
+    <Container>
+      <ul class="menu-nav__list" role="list">
+        {
+          categories.map((c) => (
+            <li>
+              <a href={`#${c.id}`} class="menu-nav__link" data-menu-link>
+                {c.title}
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+    </Container>
+  </nav>
+
+  <Container>
+    {note && <p class="mt-8 text-sm text-muted">{note}</p>}
+
+    {
+      categories.map((c) => {
+        const color = swatch(c);
+        return (
+          <section id={c.id} class="menu-cat" aria-labelledby={`${c.id}-title`} data-menu-cat>
+            <header class="menu-cat__head">
+              <span class="menu-cat__mark" style={`background:${color.bg}`} aria-hidden="true" />
+              <div>
+                <h2 id={`${c.id}-title`} class="text-h2">
+                  {c.title}
+                </h2>
+                {c.subtitle && <p class="mt-1 text-muted">{c.subtitle}</p>}
+              </div>
+            </header>
+
+            <div class="menu-cat__groups">
+              {c.groups.map((g) => (
+                <div class:list={['menu-group', g.items.length > 8 && 'menu-group--long']}>
+                  {g.title && (
+                    <h3 class="menu-group__title" style={`--chip-bg:${color.bg};--chip-fg:${color.fg}`}>
+                      {g.title}
+                    </h3>
+                  )}
+                  <ul role="list">
+                    {g.items.map((item) => (
+                      <li class="menu-item">
+                        <div class="menu-item__row">
+                          <span class="menu-item__name">{item.name}</span>
+                          {item.tag && <span class="menu-item__tag">{item.tag}</span>}
+                          {item.price && (
+                            <>
+                              <span class="menu-item__dots" aria-hidden="true" />
+                              <span class="menu-item__price">R$ {item.price}</span>
+                            </>
+                          )}
+                        </div>
+                        {item.description && <p class="menu-item__desc">{item.description}</p>}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              ))}
+            </div>
+          </section>
+        );
+      })
+    }
+  </Container>
+</div>
+
+<style>
+  .menu-nav {
+    position: sticky;
+    top: 4rem;
+    z-index: 20;
+    background: color-mix(in srgb, var(--color-bg) 94%, transparent);
+    border-bottom: 1px solid var(--color-line);
+    backdrop-filter: blur(8px);
+  }
+
+  @media (min-width: 64rem) {
+    .menu-nav {
+      top: 5rem;
+    }
+  }
+
+  .menu-nav__list {
+    position: relative;
+    display: flex;
+    gap: 0.5rem;
+    overflow-x: auto;
+    padding-block: 0.75rem;
+    scrollbar-width: none;
+    margin-inline: -1.25rem;
+    padding-inline: 1.25rem;
+  }
+
+  .menu-nav__list::-webkit-scrollbar {
+    display: none;
+  }
+
+  .menu-nav__link {
+    display: inline-flex;
+    align-items: center;
+    min-height: 2.5rem;
+    padding: 0 1rem;
+    border: 1px solid var(--color-line);
+    border-radius: 999px;
+    background: var(--color-surface);
+    font-size: 0.9375rem;
+    font-weight: 500;
+    white-space: nowrap;
+    transition:
+      background-color 0.2s,
+      color 0.2s,
+      border-color 0.2s;
+  }
+
+  .menu-nav__link:hover {
+    border-color: var(--color-ink);
+  }
+
+  .menu-nav__link[aria-current='true'] {
+    background: var(--color-primary);
+    border-color: var(--color-primary);
+    color: var(--color-primary-contrast);
+  }
+
+  .menu-cat {
+    scroll-margin-top: 9rem;
+    padding-block: 3.5rem;
+    border-bottom: 1px solid var(--color-line);
+  }
+
+  .menu-cat:last-child {
+    border-bottom: 0;
+  }
+
+  @media (min-width: 64rem) {
+    .menu-cat {
+      scroll-margin-top: 10rem;
+      padding-block: 4.5rem;
+    }
+  }
+
+  .menu-cat__head {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 2.25rem;
+  }
+
+  .menu-cat__mark {
+    flex: none;
+    width: 0.9rem;
+    height: 2.75rem;
+    border-radius: 999px;
+  }
+
+  .menu-cat__groups {
+    columns: 1;
+    column-gap: 4rem;
+  }
+
+  @media (min-width: 48rem) {
+    .menu-cat__groups {
+      columns: 2;
+    }
+  }
+
+  .menu-group {
+    break-inside: avoid;
+    margin-bottom: 2rem;
+  }
+
+  /* Listas longas podem continuar na coluna seguinte (item a item) */
+  .menu-group--long {
+    break-inside: auto;
+  }
+
+  .menu-group--long .menu-item {
+    break-inside: avoid;
+  }
+
+  .menu-group__title {
+    break-after: avoid;
+  }
+
+  .menu-group__title {
+    display: inline-block;
+    margin-bottom: 0.75rem;
+    padding: 0.3rem 0.8rem;
+    border-radius: 999px;
+    background: var(--chip-bg);
+    color: var(--chip-fg);
+    font-family: var(--font-sans);
+    font-size: 0.8125rem;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+  }
+
+  .menu-item {
+    padding-block: 0.7rem;
+    border-bottom: 1px dashed var(--color-line);
+  }
+
+  .menu-item:last-child {
+    border-bottom: 0;
+  }
+
+  .menu-item__row {
+    display: flex;
+    align-items: baseline;
+    gap: 0.6rem;
+  }
+
+  .menu-item__name {
+    font-size: 1.0625rem;
+    font-weight: 600;
+  }
+
+  .menu-item__dots {
+    flex: 1;
+    border-bottom: 1px dotted color-mix(in srgb, var(--color-ink) 35%, transparent);
+  }
+
+  .menu-item__price {
+    font-weight: 600;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .menu-item__tag {
+    padding: 0.1rem 0.5rem;
+    border-radius: 999px;
+    border: 1px solid var(--color-line);
+    background: var(--color-secondary);
+    color: var(--color-ink);
+    font-size: 0.75rem;
+    font-weight: 600;
+  }
+
+  .menu-item__desc {
+    margin-top: 0.2rem;
+    font-size: 0.9375rem;
+    line-height: 1.5;
+    color: var(--color-muted);
+  }
+</style>
+
+<script>
+  // Destaca a categoria visível e mantém o chip ativo à vista no celular.
+  const links = Array.from(document.querySelectorAll<HTMLAnchorElement>('[data-menu-link]'));
+  const sections = Array.from(document.querySelectorAll<HTMLElement>('[data-menu-cat]'));
+
+  if (links.length && 'IntersectionObserver' in window) {
+    const setActive = (id: string) => {
+      links.forEach((l) => {
+        const active = l.hash === `#${id}`;
+        if (active) {
+          l.setAttribute('aria-current', 'true');
+          const list = l.closest('ul');
+          if (list) list.scrollTo({ left: l.offsetLeft - list.clientWidth / 2 + l.clientWidth / 2, behavior: 'smooth' });
+        } else l.removeAttribute('aria-current');
+      });
+    };
+    const io = new IntersectionObserver(
+      (entries) => entries.forEach((e) => e.isIntersecting && setActive(e.target.id)),
+      { rootMargin: '-35% 0px -60% 0px' },
+    );
+    sections.forEach((s) => io.observe(s));
+  }
+</script>
