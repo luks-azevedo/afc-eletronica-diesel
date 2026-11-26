@@ -1,7 +1,10 @@
 ---
 /**
- * Logotipo a partir de site.logo. Sem arquivo configurado, exibe o nome
- * da empresa com a fonte de títulos do tema.
+ * Logotipo a partir de site.logo:
+ * - src            → imagem
+ * - src + wordmark → símbolo (imagem) + nome em texto ao lado
+ * - wordmark       → logotipo tipográfico
+ * - nada           → nome da empresa com a fonte de títulos
  */
 import { site } from '../../config/site';
 
@@ -15,7 +18,17 @@ const src = inverted && logo.srcInverted ? logo.srcInverted : logo.src;
 ---
 
 {
-  src ? (
+  src && logo.wordmark ? (
+    <span class:list={['inline-flex items-center gap-3', className]}>
+      <img src={src} alt="" width={logo.width} height={logo.height} class="h-10 w-auto sm:h-11" decoding="async" />
+      <span class="inline-flex flex-col leading-none">
+        <span class="font-heading text-lg tracking-[0.02em] sm:text-xl">{logo.wordmark}</span>
+        {logo.tagline && (
+          <span class="mt-1 text-[0.625rem] font-semibold tracking-[0.22em] uppercase opacity-75">{logo.tagline}</span>
+        )}
+      </span>
+    </span>
+  ) : src ? (
     <img
       src={src}
       alt={logo.alt || site.name}

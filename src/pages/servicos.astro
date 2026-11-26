@@ -3,43 +3,34 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 import Hero from '../components/sections/Hero.astro';
 import ServicesSection from '../components/sections/ServicesSection.astro';
 import BenefitsSection from '../components/sections/BenefitsSection.astro';
-import FAQSection from '../components/sections/FAQSection.astro';
 import CTASection from '../components/sections/CTASection.astro';
-import { services, process, faq } from '../data/demo';
+import { services, vehicles } from '../data/afc';
+import { whatsappMessages } from '../config/site';
+import { whatsappUrl } from '../lib/contact';
+
+const agendar = whatsappUrl(whatsappMessages.agendar) ?? '/contato';
 ---
 
 <BaseLayout
   title="Serviços"
-  description="Diagnóstico empresarial, planejamento financeiro, gestão de processos, indicadores e mentoria para gestores."
+  description="Diagnóstico com scanner, reparo e programação de módulos, injeção diesel, common rail, Arla 32, DPF/EGR, tacógrafo, mecânica e ar-condicionado para veículos diesel."
 >
   <Hero
     variant="page"
     eyebrow="Serviços"
-    title="Serviços com escopo claro e entregas definidas."
-    description="Cada serviço pode ser contratado separadamente ou combinado em um projeto sob medida."
+    title="Eletrônica, injeção diesel e emissões"
+    description="Serviços para caminhões, ônibus e vans Mercedes-Benz, Scania e Volvo, com agendamento pelo WhatsApp."
+    primaryCta={{ label: 'Agendar pelo WhatsApp', href: agendar }}
   />
 
-  <ServicesSection
-    id="lista-servicos"
-    title="O que fazemos"
-    items={services}
-    variant="list"
-  />
+  <ServicesSection id="lista-servicos" title="O que fazemos" items={services} variant="list" />
 
-  <BenefitsSection
-    id="como-funciona"
-    tone="muted"
-    eyebrow="Como funciona"
-    title="Etapas de um projeto"
-    items={process}
-    variant="numbered"
-  />
-
-  <FAQSection eyebrow="Dúvidas" title="Sobre os serviços" items={faq.slice(1)} />
+  <BenefitsSection tone="inverted" id="veiculos" eyebrow="Veículos atendidos" title="Da van ao cavalo mecânico" items={vehicles} />
 
   <CTASection
-    title="Não sabe por onde começar?"
-    description="O diagnóstico é um bom primeiro passo para definir prioridades."
-    primaryCta={{ label: 'Solicitar proposta', href: '/contato' }}
+    title="Não encontrou o serviço?"
+    description="Fale com a equipe pelo WhatsApp e informe o veículo e o problema."
+    primaryCta={{ label: 'Falar pelo WhatsApp', href: agendar }}
+    secondaryCta={{ label: 'Horário e endereço', href: '/contato' }}
   />
 </BaseLayout>

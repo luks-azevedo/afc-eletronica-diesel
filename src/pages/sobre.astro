@@ -2,54 +2,44 @@
 import BaseLayout from '../layouts/BaseLayout.astro';
 import Hero from '../components/sections/Hero.astro';
 import AboutSection from '../components/sections/AboutSection.astro';
-import BenefitsSection from '../components/sections/BenefitsSection.astro';
 import GallerySection from '../components/sections/GallerySection.astro';
 import CTASection from '../components/sections/CTASection.astro';
-import { benefits, gallery } from '../data/demo';
+import { photos, gallery } from '../data/afc';
+import { whatsappMessages } from '../config/site';
+import { whatsappUrl } from '../lib/contact';
+
+const agendar = whatsappUrl(whatsappMessages.agendar) ?? '/contato';
 ---
 
 <BaseLayout
   title="Sobre"
-  description="Conheça a Viana Consultoria e a forma como conduzimos cada projeto de gestão e finanças."
+  description="Conheça a AFC Eletrônica Diesel: eletrônica embarcada, gerenciamento do motor e câmbio para veículos diesel em Conselheiro Lafaiete."
 >
   <Hero
     variant="page"
     eyebrow="Sobre"
-    title="Uma consultoria próxima, com foco no dia a dia da empresa."
-    description="Acreditamos que boa gestão começa com informação organizada e conversas francas."
+    title="Eletrônica diesel em Conselheiro Lafaiete"
+    description="Eletrônica embarcada, gerenciamento do motor e câmbio para caminhões, ônibus e vans."
   />
 
   <AboutSection
-    id="historia"
-    eyebrow="Como trabalhamos"
-    title="Entender antes de propor."
+    id="empresa"
+    eyebrow="A AFC"
+    title="Foco na eletrônica do veículo diesel"
     paragraphs={[
-      'Cada projeto começa com uma escuta cuidadosa: quem são os sócios, como a equipe trabalha e quais decisões estão travadas.',
-      'A partir daí, propomos um caminho com etapas claras, entregas parciais e acompanhamento — sem relatórios que ficam na gaveta.',
-      'O objetivo é deixar a empresa mais autônoma: com rotinas que continuam funcionando depois que o projeto termina.',
+      'A AFC Eletrônica Diesel trabalha com os sistemas que comandam o veículo: módulos, sensores, gerenciamento do motor e do câmbio, injeção e emissões.',
+      'Atende caminhões leves, médios e pesados, ônibus e vans, com mecatrônica diesel para Mercedes-Benz, Scania e Volvo.',
+      'A oficina fica na Av. Geraldo Plaza, 920, bairro Paulo VI, e funciona de segunda a sexta, das 8h às 18h.',
     ]}
-    highlights={[
-      { title: 'Atendimento', description: 'Presencial e online' },
-      { title: 'Formato', description: 'Projetos e mentorias' },
-      { title: 'Público', description: 'Pequenas e médias empresas' },
-      { title: 'Linguagem', description: 'Simples e direta' },
-    ]}
+    image={photos.picape}
   />
 
-  <BenefitsSection tone="inverted" eyebrow="Princípios" title="O que não abrimos mão" items={benefits} />
-
-  <GallerySection
-    eyebrow="Espaço"
-    title="Um ambiente pensado para boas conversas"
-    description="Use esta seção para fotos do espaço, da equipe ou do trabalho."
-    images={gallery.slice(0, 5)}
-    illustrative
-  />
+  <GallerySection tone="muted" eyebrow="Estrutura" title="Nossa oficina" images={gallery} />
 
   <CTASection
-    variant="card"
-    title="Quer saber se a consultoria faz sentido para você?"
-    description="Conte um pouco sobre a sua empresa e indicamos o melhor formato."
-    primaryCta={{ label: 'Falar com a consultoria', href: '/contato' }}
+    title="Agende o atendimento do seu veículo"
+    description="Fale com a AFC pelo WhatsApp."
+    primaryCta={{ label: 'Agendar pelo WhatsApp', href: agendar }}
+    secondaryCta={{ label: 'Ver serviços', href: '/servicos' }}
   />
 </BaseLayout>

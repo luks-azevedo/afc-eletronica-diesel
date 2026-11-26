@@ -1,83 +1,75 @@
 ---
-/**
- * Página inicial — demonstra várias combinações de seções.
- * Remova, reordene ou troque variantes/tons conforme o projeto.
- */
 import BaseLayout from '../layouts/BaseLayout.astro';
 import Hero from '../components/sections/Hero.astro';
+import StripeBand from '../components/sections/StripeBand.astro';
 import ServicesSection from '../components/sections/ServicesSection.astro';
-import AboutSection from '../components/sections/AboutSection.astro';
 import BenefitsSection from '../components/sections/BenefitsSection.astro';
-import PortfolioSection from '../components/sections/PortfolioSection.astro';
-import TestimonialsSection from '../components/sections/TestimonialsSection.astro';
+import AboutSection from '../components/sections/AboutSection.astro';
+import VisitSection from '../components/sections/VisitSection.astro';
 import FAQSection from '../components/sections/FAQSection.astro';
 import CTASection from '../components/sections/CTASection.astro';
-import { images, services, benefits, process, portfolio, testimonials, faq } from '../data/demo';
+import { photos, services, vehicles, brands, steps, faq } from '../data/afc';
+import { slogan, whatsappMessages } from '../config/site';
+import { whatsappUrl } from '../lib/contact';
 
-const servicesWithLinks = services.map((s) => ({ ...s, href: `/servicos#${s.id}` }));
+const agendar = whatsappUrl(whatsappMessages.agendar) ?? '/contato';
+const orcamento = whatsappUrl(whatsappMessages.orcamento) ?? '/contato';
+const homeServices = services.map((s) => ({ ...s, href: `/servicos#${s.id}` }));
 ---
 
 <BaseLayout>
   <Hero
-    variant="split"
-    eyebrow="Consultoria em gestão e finanças"
-    title="Decisões mais claras para pequenas empresas."
-    description="Organizamos números, rotinas e prioridades para que a gestão acompanhe o negócio com segurança."
-    primaryCta={{ label: 'Agendar uma conversa', href: '/contato' }}
-    secondaryCta={{ label: 'Conhecer os serviços', href: '/servicos' }}
-    image={images.hero}
-    imageIllustrative
-    highlights={['Atendimento presencial e online', 'Proposta personalizada']}
+    variant="cover"
+    coverTone="inverted"
+    eyebrow="Eletrônica diesel · Conselheiro Lafaiete"
+    title={slogan}
+    description="Eletrônica embarcada, gerenciamento do motor e câmbio, injeção diesel e emissões para caminhões, ônibus e vans."
+    primaryCta={{ label: 'Agendar pelo WhatsApp', href: agendar }}
+    secondaryCta={{ label: 'Ver serviços', href: '/servicos' }}
+    image={photos.hero}
   />
+
+  <StripeBand lead="Mecatrônica diesel" items={brands} flag={false} />
 
   <ServicesSection
-    tone="surface"
     eyebrow="Serviços"
-    title="Como podemos ajudar"
-    description="Trabalhos com escopo definido, pensados para a realidade de empresas menores."
-    items={servicesWithLinks}
-    limit={3}
-    cta={{ label: 'Ver todos os serviços', href: '/servicos' }}
+    title="Especialistas no que move o seu veículo"
+    description="Do diagnóstico eletrônico à injeção e ao Arla 32: serviços para manter caminhões, ônibus e vans trabalhando."
+    items={homeServices}
+    cta={{ label: 'Todos os serviços', href: '/servicos' }}
   />
+
+  <BenefitsSection tone="inverted" id="veiculos" eyebrow="Veículos atendidos" title="Da van ao cavalo mecânico" items={vehicles} />
 
   <AboutSection
-    eyebrow="Sobre"
-    title="Gestão sem complicação."
+    eyebrow="A AFC"
+    title="Estrutura no bairro Paulo VI"
     paragraphs={[
-      'A Viana Consultoria acompanha empresas que cresceram rápido e precisam organizar a casa antes do próximo passo.',
-      'O trabalho é feito junto com a equipe, com linguagem simples e foco no que pode ser aplicado no dia a dia.',
+      'A AFC Eletrônica Diesel atende caminhões, ônibus e vans em Conselheiro Lafaiete, com foco em eletrônica embarcada, gerenciamento do motor e câmbio.',
+      'O atendimento é de segunda a sexta, das 8h às 18h, com agendamento pelo WhatsApp.',
     ]}
-    image={images.about}
-    imageIllustrative
-    cta={{ label: 'Conhecer a consultoria', href: '/sobre' }}
+    image={photos.caminhao}
+    imagePosition="right"
+    cta={{ label: 'Conheça a AFC', href: '/sobre' }}
   />
 
-  <BenefitsSection tone="muted" eyebrow="Diferenciais" title="O que orienta o nosso trabalho" items={benefits} />
-
-  <BenefitsSection
-    id="como-funciona"
-    eyebrow="Como funciona"
-    title="Do primeiro contato ao acompanhamento"
-    items={process}
-    variant="numbered"
-  />
-
-  <PortfolioSection
-    tone="surface"
-    eyebrow="Projetos"
-    title="Tipos de trabalho que realizamos"
-    items={portfolio}
-    illustrative
-  />
-
-  <TestimonialsSection eyebrow="Depoimentos" title="O que dizem os clientes" items={testimonials} illustrative />
-
-  <FAQSection tone="muted" eyebrow="Dúvidas" title="Perguntas frequentes" items={faq} />
+  <BenefitsSection tone="muted" id="como-funciona" eyebrow="Como funciona" title="Do agendamento à entrega" items={steps} variant="numbered" />
 
   <CTASection
-    title="Vamos conversar sobre a sua empresa?"
-    description="Uma primeira conversa, sem compromisso, para entender o momento do negócio."
-    primaryCta={{ label: 'Agendar conversa', href: '/contato' }}
+    variant="card"
+    title="Luz de falha acesa no painel?"
+    description="Informe marca, modelo e ano do veículo pelo WhatsApp e solicite um orçamento."
+    primaryCta={{ label: 'Pedir orçamento', href: orcamento }}
     secondaryCta={{ label: 'Ver serviços', href: '/servicos' }}
   />
+
+  <VisitSection
+    eyebrow="Visite"
+    title="Horário e endereço"
+    description="Av. Geraldo Plaza, no bairro Paulo VI."
+    whatsappMessage={whatsappMessages.agendar}
+    whatsappLabel="Agendar pelo WhatsApp"
+  />
+
+  <FAQSection tone="muted" eyebrow="Dúvidas" title="Perguntas frequentes" items={faq} />
 </BaseLayout>

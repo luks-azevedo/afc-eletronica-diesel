@@ -100,7 +100,41 @@ const moderno: Theme = {
   layout: { containerWidth: '1280px', sectionSpacing: ['4.5rem', '8rem'] },
 };
 
-export const themes = { editorial, clinica, moderno } as const;
+/**
+ * AFC Eletrônica Diesel — moderno e premium (referências: Volvo Trucks e VW Caminhões),
+ * com o azul-marinho (#012061) e o vermelho (#E60118) do logotipo.
+ * Contraste: texto 16:1, muted 6.9:1, accent (vermelho) 5.1:1, botão 14:1.
+ */
+const afc: Theme = {
+  name: 'afc',
+  colors: {
+    primary: '#012061',
+    primaryContrast: '#FFFFFF',
+    secondary: '#E9EDF4',
+    accent: '#C8101F',
+    background: '#F5F7FA',
+    surface: '#FFFFFF',
+    text: '#0A1530',
+    muted: '#4B5568',
+    border: '#DCE1EA',
+    inverted: '#011645',
+    invertedText: '#F2F5FA',
+  },
+  fonts: {
+    heading: { name: 'Archivo', fallback: 'sans-serif', weights: ['500 800'] },
+    body: { name: 'Inter', fallback: 'sans-serif', weights: ['400 600'] },
+  },
+  typography: {
+    headingWeight: 700,
+    headingTracking: '-0.025em',
+    headingLineHeight: 1.04,
+    baseSize: '1.0625rem',
+  },
+  radius: { control: '6px', card: '10px' },
+  layout: { containerWidth: '1240px', sectionSpacing: ['4.5rem', '7.5rem'] },
+};
 
-/** Tema ativo. Troque para `themes.clinica`, `themes.moderno` ou um preset próprio. */
-export const theme: Theme = themes.editorial;
+export const themes = { editorial, clinica, moderno, afc } as const;
+
+/** Tema ativo. */
+export const theme: Theme = themes.afc;
